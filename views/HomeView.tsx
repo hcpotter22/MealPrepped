@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sparkles, History, Search } from 'lucide-react';
-import { Button, Card, Header } from '../components/SharedComponents';
+import { Sparkles, History, Settings } from 'lucide-react';
+import { Button, Card } from '../components/SharedComponents';
 import { ViewState } from '../types';
 
 interface HomeViewProps {
@@ -11,7 +11,18 @@ interface HomeViewProps {
 export const HomeView = ({ onNavigate, recentRecipes }: HomeViewProps) => {
   return (
     <div className="flex flex-col h-full bg-stone-50">
-      <Header title="Good Evening" subtitle="What are we cooking today?" />
+      <div className="pt-8 pb-6 px-6 bg-white sticky top-0 z-10 border-b border-stone-100 flex justify-between items-end">
+        <div>
+          <h1 className="font-serif text-3xl font-bold text-stone-900">Good Evening</h1>
+          <p className="text-stone-500 mt-1">What are we cooking today?</p>
+        </div>
+        <button 
+          onClick={() => onNavigate(ViewState.SETTINGS)}
+          className="p-2 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-all"
+        >
+          <Settings className="w-6 h-6" />
+        </button>
+      </div>
       
       <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-24 no-scrollbar">
         {/* Hero Section */}

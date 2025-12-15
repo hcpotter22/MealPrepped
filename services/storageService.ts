@@ -1,6 +1,15 @@
 import { SavedRecipe, AppData } from "../types";
 
 const KEY_SAVED_RECIPES = "mealprepped_saved_recipes";
+const KEY_API_KEY = "mealprepped_api_key";
+
+export const getApiKey = (): string | null => {
+  return localStorage.getItem(KEY_API_KEY);
+};
+
+export const saveApiKey = (key: string) => {
+  localStorage.setItem(KEY_API_KEY, key);
+};
 
 export const getSavedRecipes = (): SavedRecipe[] => {
   const raw = localStorage.getItem(KEY_SAVED_RECIPES);

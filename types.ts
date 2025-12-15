@@ -53,6 +53,7 @@ export enum ViewState {
   BROWSE = 'BROWSE',
   SAVED = 'SAVED',
   RECIPE_DETAIL = 'RECIPE_DETAIL',
+  SETTINGS = 'SETTINGS',
 }
 
 export interface GenerateParams {

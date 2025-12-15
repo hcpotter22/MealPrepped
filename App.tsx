@@ -10,9 +10,11 @@ import { HomeView } from './views/HomeView';
 import { GenerateView } from './views/GenerateView';
 import { RecipeDetailView } from './views/RecipeDetailView';
 import { BrowseView } from './views/BrowseView';
+import { SettingsView } from './views/SettingsView';
 
 export default function App() {
   const [view, setView] = useState<ViewState>(ViewState.INTRO);
+  const [apiKey, setApiKey] = useState<string | null>(null);
   
   const [currentRecipe, setCurrentRecipe] = useState<AppData | null>(null);
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
@@ -23,9 +25,12 @@ export default function App() {
   useEffect(() => {
     const saved = storage.getSavedRecipes();
     setSavedRecipes(saved);
+    
+    const key = storage.getApiKey();
+    if (key) setApiKey(key);
 
-    // Skip intro if we have used the app before (simulated by having saved recipes)
-    if (saved.length > 0) {
+    // Skip intro if we have used the app before
+    if (saved.length > 0 || key) {
        setView(ViewState.HOME);
     }
   }, []);
@@ -34,24 +39,38 @@ export default function App() {
     setView(ViewState.HOME);
   };
 
+  const handleSaveKey = (key: string) => {
+    storage.saveApiKey(key);
+    setApiKey(key);
+  };
+
   const handleGenerate = async (params: GenerateParams) => {
+    if (!apiKey) {
+      alert("Please configure your API Key in Settings first.");
+      setView(ViewState.SETTINGS);
+      return;
+    }
+
     setIsGenerating(true);
     try {
-      const data = await generateRecipe(params.cuisine, params.mealTime, params.servings, params.pantryItems);
+      const data = await generateRecipe(apiKey, params.cuisine, params.mealTime, params.servings, params.pantryItems);
       setCurrentRecipe(data);
       setView(ViewState.RECIPE_DETAIL);
     } catch (e) {
-      alert("Failed to generate recipe. Please try again.");
+      alert("Failed to generate recipe. Check your API Key and try again.");
     } finally {
       setIsGenerating(false);
     }
   };
 
   const handleRefine = async (instruction: string) => {
-    if (!currentRecipe) return;
+    if (!currentRecipe || !apiKey) {
+      if (!apiKey) setView(ViewState.SETTINGS);
+      return;
+    }
     setIsRefining(true);
     try {
-      const newData = await refineRecipe(currentRecipe, instruction);
+      const newData = await refineRecipe(apiKey, currentRecipe, instruction);
       setCurrentRecipe(newData);
     } catch (e) {
       alert("Failed to refine. Try again.");
@@ -91,6 +110,7 @@ export default function App() {
         {view === ViewState.GENERATE && <GenerateView onGenerate={handleGenerate} isGenerating={isGenerating} />}
         {view === ViewState.BROWSE && <BrowseView savedRecipes={savedRecipes} onSelect={handleSelectSaved} onDelete={handleDeleteRecipe} />}
         {view === ViewState.SAVED && <BrowseView savedRecipes={savedRecipes} onSelect={handleSelectSaved} onDelete={handleDeleteRecipe} />}
+        {view === ViewState.SETTINGS && <SettingsView onBack={() => setView(ViewState.HOME)} onSave={handleSaveKey} />}
         {view === ViewState.RECIPE_DETAIL && currentRecipe && (
           <RecipeDetailView 
             data={currentRecipe} 
@@ -102,8 +122,8 @@ export default function App() {
         )}
       </div>
 
-      {/* Bottom Navigation */}
-      {view !== ViewState.RECIPE_DETAIL && (
+      {/* Bottom Navigation (Hidden for Details and Settings) */}
+      {view !== ViewState.RECIPE_DETAIL && view !== ViewState.SETTINGS && (
         <div className="bg-white/90 backdrop-blur-lg border-t border-stone-100 flex justify-around items-center h-20 px-6 pb-2 absolute bottom-0 w-full z-50">
           <NavButton 
             active={view === ViewState.HOME} 

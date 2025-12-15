@@ -78,16 +78,14 @@ const RECIPE_SCHEMA: Schema = {
 };
 
 export const generateRecipe = async (
+  apiKey: string,
   cuisine: string,
   mealTime: string,
   servings: number,
   pantryItems: string
 ): Promise<AppData> => {
-  // STRICTLY use the environment variable. 
-  // Do NOT hardcode keys or accept them from UI inputs.
-  const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("API Key not found in environment variables.");
+    throw new Error("API Key is missing. Please check your settings.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -122,12 +120,12 @@ export const generateRecipe = async (
 };
 
 export const refineRecipe = async (
+  apiKey: string,
   currentData: AppData,
   instruction: string
 ): Promise<AppData> => {
-  const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("API Key not found in environment variables.");
+    throw new Error("API Key is missing. Please check your settings.");
   }
   
   const ai = new GoogleGenAI({ apiKey });
