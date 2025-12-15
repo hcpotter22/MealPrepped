@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MealPrepped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Inter"', 'sans-serif'],
+              serif: ['"Lora"', 'serif'],
+            },
+            colors: {
+              olive: {
+                50: '#f4f7f0',
+                100: '#e6efe0',
+                200: '#cedec3',
+                300: '#acc59d',
+                400: '#87a873',
+                500: '#698c54',
+                600: '#526f41', // Primary brand color
+                700: '#435936',
+                800: '#38482e',
+                900: '#2f3c28',
+              },
+              stone: {
+                850: '#1f1f1d', // Deep black surface
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        -webkit-tap-highlight-color: transparent;
+        background-color: #fafaf9; /* stone-50 */
+      }
+      /* Hide scrollbar for clean horizontal scrolls */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+</head>
+  <body class="bg-stone-50 text-stone-900 antialiased h-screen overflow-hidden flex flex-col">
+    <div id="root" class="flex-1 flex flex-col h-full overflow-hidden"></div>
+  </body>
+</html>
